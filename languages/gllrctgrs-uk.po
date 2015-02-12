@@ -1,0 +1,151 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Gallery Categories\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-06 18:45+0300\n"
+"PO-Revision-Date: 2015-02-11 14:17+0300\n"
+"Language-Team: bestwebsoft.com <wp_theme@bestwebsoft.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: ../\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Ukrainian\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Country: UKRAINE\n"
+"Last-Translator: bestwebsoft.com <plugins@bestwebsoft.com>\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: gallery-categories.php:172
+msgid "requires"
+msgstr "потребує"
+
+#: gallery-categories.php:172
+msgid "or higher, that is why it has been deactivated! Please upgrade WordPress and try again."
+msgstr "або вище, ось чому його було деактивовано! Будь ласка, оновіть WordPress та спробуйте ще раз."
+
+#: gallery-categories.php:172
+msgid "Back to the WordPress"
+msgstr "Назад на WordPress"
+
+#: gallery-categories.php:172
+msgid "Plugins page"
+msgstr "на сторінку плагінів"
+
+#: gallery-categories.php:188
+msgid "Gallery Plugin not found.</br>Please install and activate this plugin to make sure Gallery Categories plugin works correctly.</br>You can download Gallery Plugin from"
+msgstr "Плагіну Gallery не знайдено. </br> Для коректної роботи плагіну Gallery Categories, будь ласка, встановіть та активуйте плагін Gallery. </br> Ви можете скачати його з"
+
+#: gallery-categories.php:188
+msgid "Developers website"
+msgstr "сайту розробників"
+
+#: gallery-categories.php:188
+msgid "plugin authors' website"
+msgstr "сайту авторів плагіну"
+
+#: gallery-categories.php:188
+msgid "or"
+msgstr "чи"
+
+#: gallery-categories.php:188
+msgid "WordPress."
+msgstr "WordPress."
+
+#: gallery-categories.php:191
+msgid "Gallery Plugin is not activated.</br>Please activate the plugin to make sure Gallery Categories plugin works correctly."
+msgstr "Плагін Gallery не активовано.</br> Для коректної роботи плагіну Gallery Categories, будь ласка, активуйте плагін Gallery."
+
+#: gallery-categories.php:194
+msgid "Gallery Plugin version is outdated.</br>Please update the plugin to make sure Gallery Categories plugin works correctly."
+msgstr "Застаріла версія плагіну Gallery .</br>Будь ласка, оновіть плагін Gallery для коректної роботи плагіну Gallery Categories."
+
+#: gallery-categories.php:209
+#: gallery-categories.php:375
+msgid "Gallery Categories"
+msgstr "Категорії галерей"
+
+#: gallery-categories.php:210
+msgid "Gallery Category"
+msgstr "Категорія галерей"
+
+#: gallery-categories.php:211
+msgid "Add Gallery Category"
+msgstr "Додати категорію галерей"
+
+#: gallery-categories.php:212
+msgid "Add New Gallery Category"
+msgstr "Додати нову категорію галерей"
+
+#: gallery-categories.php:213
+#: gallery-categories.php:214
+msgid "Edit Gallery Category"
+msgstr "Редагувати категорію галерей"
+
+#: gallery-categories.php:215
+msgid "New Gallery Category"
+msgstr "Нова категорія галерей"
+
+#: gallery-categories.php:216
+#: gallery-categories.php:217
+msgid "View Gallery Category"
+msgstr "Переглянути категорію галерей"
+
+#: gallery-categories.php:218
+msgid "Find Gallery Category"
+msgstr "Знайти категорію галерей"
+
+#: gallery-categories.php:219
+msgid "No Gallery Categories found"
+msgstr "Не знайдено жодної категорії галерей"
+
+#: gallery-categories.php:220
+msgid "No Gallery Categories found in Trash"
+msgstr "В Корзині не знайдено жодної категорії галерей"
+
+#: gallery-categories.php:221
+msgid "Parent Gallery Category"
+msgstr "Вихідна категорія галерей"
+
+#: gallery-categories.php:302
+msgid "WARNING:"
+msgstr "УВАГА:"
+
+#: gallery-categories.php:317
+#: gallery-categories.php:325
+msgid "Note:"
+msgstr "Зауважте:"
+
+#: gallery-categories.php:317
+msgid "If you want to display a short description with screenshots from any category with a link to the Single Gallery Page, please add the shortcode"
+msgstr "Якщо ви хочете відображати короткий опис певної категорії зі скріншотами і посиланням на сторінку  галереї, просто вставте шорткод"
+
+#: gallery-categories.php:317
+msgid "to your post or page"
+msgstr "в контент посту чи сторінки"
+
+#: gallery-categories.php:325
+msgid "When deleting a category, the galleries that belong to this category will not be deleted. Instead, these galleries will be moved to the category"
+msgstr "Видалення категорії не призведе до видалення галерей з цієї категорії. Замість цього галереї з видаленої категорії будуть переміщені в категорію"
+
+#: gallery-categories.php:341
+msgid "FAQ"
+msgstr "FAQ"
+
+#: gallery-categories.php:342
+msgid "Support"
+msgstr "Техпідтримка"
+
+#: gallery-categories.php:353
+msgid "Shortcode"
+msgstr "Шорткод"
+
+#: gallery-categories.php:429
+msgid "All"
+msgstr "Всі"
+
+#: gallery-categories.php:507
+msgid "Can't delete"
+msgstr "Неможливо видалити"

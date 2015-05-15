@@ -1,10 +1,10 @@
 <?php
 /*
-Plugin Name: Gallery Categories
+Plugin Name: Gallery Categories by BestWebSoft
 Plugin URI: http://bestwebsoft.com/products/
 Description: Add-on for Gallery Plugin by BestWebSoft.
 Author: BestWebSoft
-Version: 1.0.0
+Version: 1.0.1
 Author URI: http://bestwebsoft.com/
 License: GPLv3 or later
 */
@@ -34,55 +34,7 @@ $gllrctgrs_taxonomy = 'gallery_categories';
 */
 if ( ! function_exists( 'gllrctgrs_admin_menu' ) ) {
 	function gllrctgrs_admin_menu() {
-		global $bstwbsftwppdtplgns_options, $bstwbsftwppdtplgns_added_menu;
-		$bws_menu_info = get_plugin_data( plugin_dir_path( __FILE__ ) . "bws_menu/bws_menu.php" );
-		$bws_menu_version = $bws_menu_info["Version"];
-		$base = plugin_basename( __FILE__ );
-
-		if ( ! isset( $bstwbsftwppdtplgns_options ) ) {
-			if ( is_multisite() ) {
-				if ( ! get_site_option( 'bstwbsftwppdtplgns_options' ) )
-					add_site_option( 'bstwbsftwppdtplgns_options', array(), '', 'yes' );
-				$bstwbsftwppdtplgns_options = get_site_option( 'bstwbsftwppdtplgns_options' );
-			} else {
-				if ( ! get_option( 'bstwbsftwppdtplgns_options' ) )
-					add_option( 'bstwbsftwppdtplgns_options', array(), '', 'yes' );
-				$bstwbsftwppdtplgns_options = get_option( 'bstwbsftwppdtplgns_options' );
-			}
-		}
-
-		if ( isset( $bstwbsftwppdtplgns_options['bws_menu_version'] ) ) {
-			$bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] = $bws_menu_version;
-			unset( $bstwbsftwppdtplgns_options['bws_menu_version'] );
-			if ( is_multisite() )
-				update_site_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
-			else
-				update_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
-			require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );
-		} else if ( ! isset( $bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] ) || $bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] < $bws_menu_version ) {
-			$bstwbsftwppdtplgns_options['bws_menu']['version'][ $base ] = $bws_menu_version;
-			if ( is_multisite() )
-				update_site_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
-			else
-				update_option( 'bstwbsftwppdtplgns_options', $bstwbsftwppdtplgns_options, '', 'yes' );
-			require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );
-		} else if ( ! isset( $bstwbsftwppdtplgns_added_menu ) ) {
-			$plugin_with_newer_menu = $base;
-			foreach ( $bstwbsftwppdtplgns_options['bws_menu']['version'] as $key => $value ) {
-				if ( $bws_menu_version < $value && is_plugin_active( $base ) ) {
-					$plugin_with_newer_menu = $key;
-				}
-			}
-			$plugin_with_newer_menu = explode( '/', $plugin_with_newer_menu );
-			$wp_content_dir = defined( 'WP_CONTENT_DIR' ) ? basename( WP_CONTENT_DIR ) : 'wp-content';
-			if ( file_exists( ABSPATH . $wp_content_dir . '/plugins/' . $plugin_with_newer_menu[0] . '/bws_menu/bws_menu.php' ) )
-				require_once( ABSPATH . $wp_content_dir . '/plugins/' . $plugin_with_newer_menu[0] . '/bws_menu/bws_menu.php' );
-			else
-				require_once( dirname( __FILE__ ) . '/bws_menu/bws_menu.php' );
-			$bstwbsftwppdtplgns_added_menu = true;
-		}
-
-		add_menu_page( 'BWS Plugins', 'BWS Plugins', 'manage_options', 'bws_plugins', 'bws_add_menu_render', plugins_url( "images/px.png", __FILE__ ), 1001 );
+		bws_add_general_menu( plugin_basename( __FILE__ ) );
 	}
 }
 /**
@@ -91,9 +43,19 @@ if ( ! function_exists( 'gllrctgrs_admin_menu' ) ) {
  */
 if ( ! function_exists( 'gllrctgrs_init' ) ) {
 	function gllrctgrs_init() {
-		global $gllrctgrs_gallery_not_ready, $gllrctgrs_options;
+		global $gllrctgrs_gallery_not_ready, $gllrctgrs_options, $gllrctgrs_plugin_info;
 		load_plugin_textdomain( 'gllrctgrs', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-		gllrctgrs_version_check();
+
+		require_once( dirname( __FILE__ ) . '/bws_menu/bws_functions.php' );
+
+		if ( empty( $gllrctgrs_plugin_info ) ) {
+			if ( ! function_exists( 'get_plugin_data' ) )
+				require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			$gllrctgrs_plugin_info = get_plugin_data( __FILE__ );
+		}
+		/* Function check if plugin is compatible with current WP version  */
+		bws_wp_version_check( plugin_basename( __FILE__ ), $gllrctgrs_plugin_info, "3.2" );
+
 		gllrctgrs_check();
 		if ( '' == $gllrctgrs_gallery_not_ready ) {
 			gllrctgrs_register_taxonomy();
@@ -123,8 +85,7 @@ if ( ! function_exists( 'gllrctgrs_init' ) ) {
 if ( ! function_exists( 'gllrctgrs_admin_init' ) ) {
 	function gllrctgrs_admin_init() {
 		global $bws_plugin_info, $gllrctgrs_plugin_info;
-		if ( ! $gllrctgrs_plugin_info ) /* Add variable for bws_menu */
-			$gllrctgrs_plugin_info = get_plugin_data( __FILE__ );
+		
 		if ( ! isset( $bws_plugin_info ) || empty( $bws_plugin_info ) )
 			$bws_plugin_info = array( 'id' => '183', 'version' => $gllrctgrs_plugin_info['Version'] );
 	}
@@ -143,7 +104,7 @@ if ( ! function_exists( 'gllrctgrs_set_options' ) ) {
 			'default_gallery_category'	=> ''
 		);
 		if ( ! get_option( 'gllrctgrs_options' ) ) /* Install the option defaults */
-			add_option( 'gllrctgrs_options', $gllrctgrs_options_defaults, '', 'yes' );
+			add_option( 'gllrctgrs_options', $gllrctgrs_options_defaults );
 		$gllrctgrs_options = get_option( 'gllrctgrs_options' ); /* Get options from the database */
 
 		/* Array merge incase this version has added new options */
@@ -151,27 +112,6 @@ if ( ! function_exists( 'gllrctgrs_set_options' ) ) {
 			$gllrctgrs_options = array_merge( $gllrctgrs_options_defaults, $gllrctgrs_options );
 			$gllrctgrs_options['plugin_option_version'] = $gllrctgrs_plugin_info['Version'];
 			update_option( 'gllrctgrs_options', $gllrctgrs_options );
-		}
-	}
-}
-/**
- * Function check if plugin is compatible with current WP version
- *
-*/ 
-if ( ! function_exists ( 'gllrctgrs_version_check' ) ) {
-	function gllrctgrs_version_check() {
-		global $wp_version, $gllrctgrs_plugin_info;
-		$require_wp		=	"3.2"; /* Wordpress at least requires version*/
-		$plugin			=	plugin_basename( __FILE__ );
-		if ( version_compare( $wp_version, $require_wp, "<" ) ) {
-			include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-			if ( is_plugin_active( $plugin ) ) {
-				deactivate_plugins( $plugin );
-				if ( ! $gllrctgrs_plugin_info )
-					$gllrctgrs_plugin_info = get_plugin_data( __FILE__ );
-				$admin_url = ( function_exists( 'get_admin_url' ) ) ? get_admin_url( null, 'plugins.php' ) : esc_url( '/wp-admin/plugins.php' );
-				wp_die( "<strong>" . $gllrctgrs_plugin_info['Name'] . " </strong> " . __( 'requires', 'gllrctgrs' ) . " <strong>WordPress " . $require_wp . "</strong> " . __( 'or higher, that is why it has been deactivated! Please upgrade WordPress and try again.', 'gllrctgrs' ) . "<br /><br />" . __( 'Back to the WordPress', 'gllrctgrs' ) . " <a href='" . $admin_url . "'>" . __( 'Plugins page', 'gllrctgrs' ) . "</a>." );
-			}
 		}
 	}
 }
@@ -260,7 +200,7 @@ if ( ! function_exists( 'gllrctgrs_add_default_term_all_gallery' ) ) {
 		) );
 		$def_term  = 'Default';
 		if ( ! empty( $posts ) ) {
-			foreach( $posts as $post ) {
+			foreach ( $posts as $post ) {
 				if ( ! has_term( '', $gllrctgrs_taxonomy, $post ) ) { /* Checked and updated if necessary term*/
 					wp_set_object_terms( $post->ID, $def_term, $gllrctgrs_taxonomy );
 				}
@@ -273,7 +213,7 @@ if ( ! function_exists( 'gllrctgrs_add_default_term_all_gallery' ) ) {
 				$def_term_info = wp_insert_term( $def_term, $gllrctgrs_taxonomy,
 					array( 
 						'description'	=> '',
-						'slug'			=> 'default', 
+						'slug'			=> 'default'
 					)
 				);
 			}
@@ -527,4 +467,3 @@ add_action( 'admin_init', 'gllrctgrs_admin_init' );
 add_action( 'admin_notices', 'gllrctgrs_show_notices' );
 add_filter( 'plugin_row_meta', 'gllrctgrs_register_plugin_links', 10, 2 );
 register_uninstall_hook( __FILE__, 'gllrctgrs_plugin_uninstall' );
-?>

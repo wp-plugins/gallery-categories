@@ -1,10 +1,10 @@
-=== Gallery Categories ===
+=== Gallery Categories by BestWebSoft ===
 Contributors: bestwebsoft
-Donate link: https://www.2checkout.com/checkout/purchase?sid=1430388&quantity=1&product_id=94
+Donate link: http://bestwebsoft.com/donate/
 Tags: add gallery categories, add gallery category, gallery categories plugin, add album, add gallery, add picture, add pictures, album, foto, fotoalbum, gallery, galery, galary, gallary, gellery, gellary, gelary, gallerie, gallery decription, gallery image, image, multiple pictures, photo, photoalbum, photogallery, pictures, slide show, slideshow, upload images, upload photos, view images, view pictures, website gallery, shortcode
 Requires at least: 3.2
-Tested up to: 4.1
-Stable tag: 1.0.0
+Tested up to: 4.2.2
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,15 +14,18 @@ Add categories of galleries to your WordPress website using the Gallery plugin b
 
 This plugin allows creating different categories of galleries on your site. This way, you could organize the galleries on your website, which makes navigating through your content a whole lot easier. Please note that this plugin is an exclusive add-on to the Gallery Plugin by BestWebSoft and it will not work without it.
 
+http://www.youtube.com/watch?v=l7K-UPOmWII
+
 <a href="http://wordpress.org/plugins/gallery-categories/faq/" target="_blank">FAQ</a>
+
 <a href="http://support.bestwebsoft.com" target="_blank">Support</a>
 
 = Features =
 
-* Actions: Adds all galleries, which the selected galleries was assigned to, to your page/post via the shortcode.  
-* Actions: Assigns default gallery category to all galleries the moment the plugin is activated and when saving/updating the post. 
-* Actions: When deleting a category, the galleries that belong to this category will not be deleted. Instead, these galleries will be moved to the category 
-* Actions: An option to rename the default category.
+* Adds all galleries, which the selected galleries was assigned to, to your page/post via the shortcode.  
+* Assigns default gallery category to all galleries the moment the plugin is activated and when saving/updating the post. 
+* When deleting a category, the galleries that belong to this category will not be deleted. Instead, these galleries will be moved to the category 
+* An option to rename the default category.
 
 = Recommended Plugins =
 
@@ -53,6 +56,8 @@ We can fix some things for free for the users who provide a translation of our p
 1. Upload the `gallery-categories` folder to `/wp-content/plugins/` directory.
 2. Activate the plugin using the 'Plugins' menu in your WordPress admin panel.
 3. Create a page or a post and insert the shortcode [print_gllr cat_id=*] into the text.
+
+<a href="https://docs.google.com/document/d/1gNBzIu6Uwa-x-k_OInCIaBbfZYPfJe6ZFl-cMq7uC84/edit" target="_blank">View a Step-by-step Instruction on Gallery Categories  Installation</a>.
 
 == Frequently Asked Questions ==
 
@@ -85,6 +90,7 @@ Please paste the shortcode of the necessary gallery category to the page/post.
 = I have some problems with the plugin's work. What Information should I provide to receive proper support? =
 
 Please make sure that the problem hasn't been discussed on our forum yet (<a href="http://support.bestwebsoft.com" target="_blank">http://support.bestwebsoft.com</a>). If not, please provide the following data along with your problem's description:
+
 1. the link to the page, on which the problem occurs
 2. the plugin’s name and version. If you are using a pro version - your order number.
 3. the version of your WordPress installation
@@ -99,10 +105,17 @@ Please make sure that the problem hasn't been discussed on our forum yet (<a hre
 
 == Changelog ==
 
-= V1.0.0  - 09.02.2015 = 
+= V1.0.1 - 15.05.2015 =
+* Update : BWS plugins section is updated.
+* Update : We updated all functionality for wordpress 4.2.2.
+
+= V1.0.0 - 09.02.2015 = 
 * Initial Release.
 
 == Upgrade Notice ==
+
+= V1.0.1 =
+BWS plugins section is updated. We updated all functionality for wordpress 4.2.2.
 
 = V1.0.0 =
 Initial Release.

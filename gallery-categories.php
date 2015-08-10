@@ -4,7 +4,7 @@ Plugin Name: Gallery Categories by BestWebSoft
 Plugin URI: http://bestwebsoft.com/products/
 Description: Add-on for Gallery Plugin by BestWebSoft.
 Author: BestWebSoft
-Version: 1.0.1
+Version: 1.0.2
 Author URI: http://bestwebsoft.com/
 License: GPLv3 or later
 */
@@ -43,8 +43,7 @@ if ( ! function_exists( 'gllrctgrs_admin_menu' ) ) {
  */
 if ( ! function_exists( 'gllrctgrs_init' ) ) {
 	function gllrctgrs_init() {
-		global $gllrctgrs_gallery_not_ready, $gllrctgrs_options, $gllrctgrs_plugin_info;
-		load_plugin_textdomain( 'gllrctgrs', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		global $gllrctgrs_gallery_not_ready, $gllrctgrs_options, $gllrctgrs_plugin_info;		
 
 		require_once( dirname( __FILE__ ) . '/bws_menu/bws_functions.php' );
 
@@ -54,7 +53,7 @@ if ( ! function_exists( 'gllrctgrs_init' ) ) {
 			$gllrctgrs_plugin_info = get_plugin_data( __FILE__ );
 		}
 		/* Function check if plugin is compatible with current WP version  */
-		bws_wp_version_check( plugin_basename( __FILE__ ), $gllrctgrs_plugin_info, "3.2" );
+		bws_wp_version_check( plugin_basename( __FILE__ ), $gllrctgrs_plugin_info, '3.2' );
 
 		gllrctgrs_check();
 		if ( '' == $gllrctgrs_gallery_not_ready ) {
@@ -65,6 +64,7 @@ if ( ! function_exists( 'gllrctgrs_init' ) ) {
 				gllrctgrs_set_options();
 				gllrctgrs_add_default_term_all_gallery();
 			}
+			add_filter( 'pre_get_posts', 'gllrctgrs_categories_get_posts' );
 			add_action( 'after-gallery_categories-table', 'gllrctgrs_add_notice_below_table' );
 			add_filter( 'manage_edit-gallery_categories_columns', 'gllrctgrs_add_column' );
 			add_filter( 'manage_gallery_categories_custom_column', 'gllrctgrs_fill_column', 10, 3 );
@@ -168,6 +168,183 @@ if ( ! function_exists( 'gllrctgrs_register_taxonomy' ) ) {
 				'map_meta_cap'		=> true
 			)
 		);
+	}
+}
+/**
+ * Change contents of main loop
+ * 
+ */
+if ( ! function_exists( 'gllrctgrs_categories_get_posts' ) ) {
+	function gllrctgrs_categories_get_posts( $query ) {
+		if ( isset( $query->query_vars['gallery_categories'] ) && ( ! is_admin() ) )
+			$query->set( 'post_type', array( 'gallery' ) ); 
+		return $query;
+	}
+}
+/**
+ * Set term slug as value of <option> tag
+ * ( used for WP 3.1 - 4.1 )  
+ */
+if ( ! class_exists( 'Gllr_CategoryDropdown' ) ) {
+	class Gllr_CategoryDropdown extends Walker_CategoryDropdown {
+		/**
+		 * Start the element output.
+		 * @param string $output   Passed by reference. Used to append additional content.
+		 * @param object $term     Category data object.
+		 * @param int    $depth    Depth of category in reference to parents. Default 0.
+		 * @param array  $args     An array of arguments.
+		 * @param int    $id       ID of the current term.
+		 */
+		function start_el( &$output, $term, $depth = 0, $args = array(), $id = 0 ) {
+			$term_name = apply_filters( 'list_cats', $term->name, $term );
+			$output  .= '<option class="level-' . $depth . '" value="' . $term->slug . '"';
+			if ( $term->slug == $args['selected'] ) { 
+			    $output .= ' selected="selected"';
+			}
+			$output .= '>';
+			$output .= str_repeat( '&nbsp;', $depth * 3 ) . $term_name;
+			if ( $args['show_count'] )
+			    $output .= '&nbsp;(' . $term->count .')';
+			$output .= '</option>';
+		}
+	}
+}
+
+/**
+ * Class extends WP class WP_Widget, and create new widget
+ * Gallery Categories widget
+ */
+if ( ! class_exists( 'gallery_categories_widget' ) ) {
+	class gallery_categories_widget extends WP_Widget {
+		/** 
+		 * constructor of class 
+		 */
+		public function __construct() {
+			$widget_ops = array( 'classname' => 'gallery_categories_widget', 'description' => __( "A list or dropdown of Gallery categories.", 'gllrctgrs' ) );
+			parent::__construct( 'gallery_categories_widget', __( 'Gallery Categories', 'gllrctgrs' ), $widget_ops );
+		}
+		/**
+		* Function to displaying widget in front end
+		*
+		*/
+		public function widget( $args, $instance ) {
+			global $wp_version;
+			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? __( 'Gallery Categories', 'gllrctgrs' ) : $instance['title'], $instance, $this->id_base );
+			$c = ! empty( $instance['count'] ) ? '1' : '0';
+			$h = ! empty( $instance['hierarchical'] ) ? '1' : '0';
+			$d = ! empty( $instance['dropdown'] ) ? '1' : '0';
+
+			/* Get value of HTTP Request */
+			if ( isset( $_REQUEST['gallery_categories'] ) ) {
+				$term = get_term_by( 'slug', $_REQUEST['gallery_categories'], 'gallery_categories' );
+			} else {
+				global $wp;
+				$http_request = parse_url( add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
+				if ( isset( $http_request['query'] ) && preg_match( '/gallery_categories/' ,$http_request['query'] ) )
+					$term = get_term_by( 'slug', substr( $http_request['query'], strpos( $http_request['query'], "=" ) + 1 ), 'gallery_categories' );
+			}
+
+			echo $args['before_widget'];
+			if ( $title ) {
+				echo $args['before_title'] . $title . $args['after_title'];
+			}
+			$cat_args = array(
+				'orderby'      => 'name',
+				'show_count'   => $c,
+				'hierarchical' => $h
+			);
+			if ( $d ) {
+				static $first_dropdown = true;
+				$dropdown_id     = ( $first_dropdown ) ? 'gllr_cat' : 'gllr_cat_' . $this->number;
+				$first_dropdown  = false;
+				echo '<label class="screen-reader-text" for="' . esc_attr( $dropdown_id ) . '">' . $title . '</label>';
+				if ( 4.2 >= $wp_version ) {
+					$cat_args['walker']       = new Gllr_CategoryDropdown();
+					$cat_args['selected']     = isset( $term ) && ( ! empty( $term ) ) ? $term->slug : '-1';
+				} else {	
+					$cat_args['value_field']  = 'slug';
+					$cat_args['selected']     = isset( $term ) && ( ! empty( $term ) ) ? $term->term_id : -1;
+				}
+				$cat_args['show_option_none'] = __( 'Select Gallery Category', 'gllrctgrs' );
+				$cat_args['taxonomy']         = 'gallery_categories';
+				$cat_args['title_li']         = __( 'Gallery Categories', 'gllrctgrs' );
+				$cat_args['name']             = 'gallery_categories';
+				$cat_args['id']               = $dropdown_id; ?>
+				<form action="<?php bloginfo( 'url' ); ?>/" method="get">
+					<?php wp_dropdown_categories( apply_filters( 'widget_categories_dropdown_args', $cat_args ) ); ?>
+					<script type='text/javascript'>
+						(function() {
+							var dropdown = document.getElementById( "<?php echo esc_js( $dropdown_id ); ?>" );
+							function onCatChange() {
+								if ( dropdown.options[ dropdown.selectedIndex ].value != -1 ) {
+									location.href = "<?php echo home_url(); ?>/?gallery_categories=" + dropdown.options[ dropdown.selectedIndex ].value;
+								}
+							}
+							dropdown.onchange = onCatChange;
+						})();
+					</script>
+					<noscript>
+						<br />
+						<input type="submit" value="<?php _e( 'View', 'gllrctgrs' ); ?>" />
+					</noscript>
+				</form>
+			<?php } else { ?>
+				<ul> 
+					<?php $cat_args['show_option_none'] = __( 'Gallery Categories', 'gllrctgrs' );
+						  $cat_args['taxonomy']         = 'gallery_categories';
+						  $cat_args['title_li']         = '';
+					wp_list_categories( apply_filters( 'widget_categories_args', $cat_args ) ); ?>
+				</ul>
+			<?php }
+			echo $args['after_widget'];
+		}
+		/**
+		 * Function to save widget settings
+		 * @param array()    $new_instance  array with new settings
+		 * @param array()    $old_instance  array with old settings
+		 * @return array()   $instance      array with updated settings
+		 */
+		public function update( $new_instance, $old_instance ) {
+			$instance 					= $old_instance;
+			$instance['title']			= strip_tags( $new_instance['title'] );
+			$instance['count']			= ! empty( $new_instance['count'] ) ? 1 : 0;
+			$instance['hierarchical']	= ! empty( $new_instance['hierarchical'] ) ? 1 : 0;
+			$instance['dropdown']		= ! empty( $new_instance['dropdown'] ) ? 1 : 0;
+			return $instance;
+		}
+		/**
+		 * Function to displaying widget settings in back end
+		 * @param  array()     $instance  array with widget settings
+		 * @return void
+		 */
+		public function form( $instance ) {
+			$instance     = wp_parse_args( ( array ) $instance, array( 'title' => '' ) );
+			$title        = esc_attr( $instance['title'] );
+			$count        = isset( $instance['count'] ) ? ( bool ) $instance['count'] : false;
+			$hierarchical = isset( $instance['hierarchical'] ) ? ( bool ) $instance['hierarchical'] : false;
+			$dropdown     = isset( $instance['dropdown'] ) ? ( bool ) $instance['dropdown'] : false; ?>
+			<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'gllrctgrs' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
+			<p><input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'dropdown' ); ?>" name="<?php echo $this->get_field_name( 'dropdown' ); ?>"<?php checked( $dropdown ); ?> />
+			<label for="<?php echo $this->get_field_id( 'dropdown' ); ?>"><?php _e( 'Display as dropdown', 'gllrctgrs' ); ?></label><br />
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'count' ); ?>" name="<?php echo $this->get_field_name( 'count' ); ?>"<?php checked( $count ); ?> />
+			<label for="<?php echo $this->get_field_id( 'count' ); ?>"><?php _e( 'Show gallery counts', 'gllrctgrs' ); ?></label><br />
+			<input type="checkbox" class="checkbox" id="<?php echo $this->get_field_id( 'hierarchical' ); ?>" name="<?php echo $this->get_field_name( 'hierarchical' ); ?>"<?php checked( $hierarchical ); ?> />
+			<label for="<?php echo $this->get_field_id( 'hierarchical' ); ?>"><?php _e( 'Show hierarchy', 'gllrctgrs' ); ?></label></p>
+		<?php }
+	}
+}
+/**
+ * Function to register widgets
+ * 
+*/
+if ( ! function_exists( 'gllrctgrs_register_widget' ) ) {
+	function gllrctgrs_register_widget() {
+		global $gllrctgrs_gallery_not_ready;
+		load_plugin_textdomain( 'gllrctgrs', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+		gllrctgrs_check();
+		if ( '' == $gllrctgrs_gallery_not_ready )
+			register_widget( 'gallery_categories_widget' );
 	}
 }
 /**
@@ -456,12 +633,14 @@ if ( ! function_exists( 'gllrctgrs_delete_term' ) ) {
 */ 
 if ( ! function_exists( 'gllrctgrs_plugin_uninstall' ) ) {
 	function gllrctgrs_plugin_uninstall() {
+		delete_option( 'widget_gallery_categories_widget' );
 		delete_option( 'gllrctgrs_options' );
 	}
 }
 
 register_activation_hook( __FILE__, 'gllrctgrs_plugin_activate' );
 add_action( 'admin_menu', 'gllrctgrs_admin_menu' );
+add_action( 'widgets_init', 'gllrctgrs_register_widget' );
 add_action( 'init', 'gllrctgrs_init' );
 add_action( 'admin_init', 'gllrctgrs_admin_init' );
 add_action( 'admin_notices', 'gllrctgrs_show_notices' );

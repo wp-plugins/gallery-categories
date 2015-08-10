@@ -3,8 +3,8 @@ Contributors: bestwebsoft
 Donate link: http://bestwebsoft.com/donate/
 Tags: add gallery categories, add gallery category, gallery categories plugin, add album, add gallery, add picture, add pictures, album, foto, fotoalbum, gallery, galery, galary, gallary, gellery, gellary, gelary, gallerie, gallery decription, gallery image, image, multiple pictures, photo, photoalbum, photogallery, pictures, slide show, slideshow, upload images, upload photos, view images, view pictures, website gallery, shortcode
 Requires at least: 3.2
-Tested up to: 4.2.2
-Stable tag: 1.0.1
+Tested up to: 4.2.4
+Stable tag: 1.0.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,6 +16,8 @@ This plugin allows creating different categories of galleries on your site. This
 
 http://www.youtube.com/watch?v=l7K-UPOmWII
 
+<a href="https://www.youtube.com/watch?v=uo2q798MeMA" target="_blank">Video instruction on Installation</a>
+
 <a href="http://wordpress.org/plugins/gallery-categories/faq/" target="_blank">FAQ</a>
 
 <a href="http://support.bestwebsoft.com" target="_blank">Support</a>
@@ -26,6 +28,7 @@ http://www.youtube.com/watch?v=l7K-UPOmWII
 * Assigns default gallery category to all galleries the moment the plugin is activated and when saving/updating the post. 
 * When deleting a category, the galleries that belong to this category will not be deleted. Instead, these galleries will be moved to the category 
 * An option to rename the default category.
+* Widget Gallery Categories
 
 = Recommended Plugins =
 
@@ -57,7 +60,9 @@ We can fix some things for free for the users who provide a translation of our p
 2. Activate the plugin using the 'Plugins' menu in your WordPress admin panel.
 3. Create a page or a post and insert the shortcode [print_gllr cat_id=*] into the text.
 
-<a href="https://docs.google.com/document/d/1gNBzIu6Uwa-x-k_OInCIaBbfZYPfJe6ZFl-cMq7uC84/edit" target="_blank">View a Step-by-step Instruction on Gallery Categories  Installation</a>.
+<a href="https://docs.google.com/document/d/1gNBzIu6Uwa-x-k_OInCIaBbfZYPfJe6ZFl-cMq7uC84/edit" target="_blank">View a Step-by-step Instruction on Gallery Categories Installation</a>.
+
+http://www.youtube.com/watch?v=uo2q798MeMA
 
 == Frequently Asked Questions ==
 
@@ -85,7 +90,8 @@ No, you cannot delete it. All galleries should belong at least to one category. 
 
 = How can I view all galleries that belong to a certain category of galleries? =
 
-Please paste the shortcode of the necessary gallery category to the page/post.
+1. Please paste the shortcode of the necessary gallery category to the page/post.
+2. Please use the widget Gallery Categories.
 
 = I have some problems with the plugin's work. What Information should I provide to receive proper support? =
 
@@ -94,16 +100,23 @@ Please make sure that the problem hasn't been discussed on our forum yet (<a hre
 1. the link to the page, on which the problem occurs
 2. the plugin’s name and version. If you are using a pro version - your order number.
 3. the version of your WordPress installation
-4. copy and paste your system status report into the message. Please read more here: <a href="https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit" target="_blank">Instuction on System Status</a>
+4. copy and paste your system status report into the message. Please read more here: <a href="https://docs.google.com/document/d/1Wi2X8RdRGXk9kMszQy1xItJrpN0ncXgioH935MaBKtc/edit" target="_blank">Instruction on System Status</a>
 
 == Screenshots ==
 
 1. Assign Gallery Category screen. 
 2. Galleries Admin panel.
 3. Add new Gallery Category page.
-4. Gallery Categories albums page in frontend. 
+4. Gallery Categories albums page in frontend.
+5. Widget Gallery Categories.
 
 == Changelog ==
+
+= V1.0.2 - 10.08.2015 =
+* NEW : Widget Gallery Categories was added.
+* Bugfix : We fixed bug with the Gallery categories displaying (when linking "View" in the Admin panel)
+* Bugfix : We fixed the bug with widgets translation in the Admin Panel.
+* Update : We updated all functionality for wordpress 4.2.4.
 
 = V1.0.1 - 15.05.2015 =
 * Update : BWS plugins section is updated.
@@ -113,6 +126,9 @@ Please make sure that the problem hasn't been discussed on our forum yet (<a hre
 * Initial Release.
 
 == Upgrade Notice ==
+
+= V1.0.2 =
+Widget Gallery Categories was added. We fixed bug with the Gallery categories displaying (when linking "View" in the Admin panel). We fixed the bug with widgets translation in the Admin Panel. We updated all functionality for wordpress 4.2.4.
 
 = V1.0.1 =
 BWS plugins section is updated. We updated all functionality for wordpress 4.2.2.
